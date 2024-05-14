@@ -121,5 +121,5 @@ npm run migration:revert
 npm run schema:drop
 
 npm run seeder:run
-run npm schematic:run
+npm run schematic:run
 ```
