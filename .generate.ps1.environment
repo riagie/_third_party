@@ -1,0 +1,3 @@
+nest generate mo application/test --flat
+nest generate co application/test
+nest generate s application/test
