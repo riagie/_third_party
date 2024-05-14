@@ -67,3 +67,4 @@ src/database/source/*
 !test.data.json
 
 src/auth
+src/application
