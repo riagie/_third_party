@@ -8,14 +8,14 @@ const config = ConfigService();
 
 let AppDataSource: DataSource | undefined;
 
-if (config.database.adapter) {
+if (config.DATABASE.ADAPTER) {
   AppDataSource = new DataSource({
     type: "mysql",
-    host: config.database.host,
-    port: config.database.port,
-    username: config.database.username,
-    password: config.database.password,
-    database: config.database.database,
+    host: config.DATABASE.HOST,
+    port: config.DATABASE.PORT,
+    username: config.DATABASE.USERNAME,
+    password: config.DATABASE.PASSWORD,
+    database: config.DATABASE.DATABASE,
     synchronize: false,
     dropSchema: false,
     logging: false,

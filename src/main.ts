@@ -17,13 +17,13 @@ async function bootstrap() {
   );
 
   const listen = app.get(ConfigService);
-  const { port, host } = listen.get("application");
+  const { PORT, HOST } = listen.get("application");
 
   app.useGlobalFilters(new ErrorMiddleware());
   if (env === "sandbox") {
     app.use(new LoggerMiddleware().use);
   }
 
-  await app.listen(port, host);
+  await app.listen(PORT, HOST);
 }
 bootstrap();

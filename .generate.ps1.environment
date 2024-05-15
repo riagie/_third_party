@@ -1,4 +1,4 @@
 nest generate mo application/application --flat
 
-nest generate co application/dummy
 nest generate s  application/dummy
+nest generate co application/dummy
