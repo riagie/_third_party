@@ -19,6 +19,15 @@ const source = (directory: string, dataJson: string, files: string[]) => {
   });
 };
 
+const processText = (text: string) => {
+  let cleanedText = text.replace(/[^a-zA-Z\s.]/g, "");
+  cleanedText = cleanedText
+    .replace(/(?:^|\s|_)(\w)/g, (_, c) => (c ? c.toUpperCase() : ""))
+    .replace(/\s+/g, "");
+
+  return cleanedText;
+};
+
 async function loadDatabase(): Promise<void> {
   let connection;
   const files: string[] = [];
@@ -28,28 +37,31 @@ async function loadDatabase(): Promise<void> {
     for (const value of files) {
       const dataJson: DataJson[] = require(value);
       const tableName = basename(value, extname(value)).split(".")[0];
-      const entityName = tableName.charAt(0).toUpperCase() + tableName.slice(1);
+      const entityName = processText(tableName);
       const entity = (await import(`./entity/${tableName}.entity`))[entityName];
 
-      connection = await createConnection({
-        ...AppDataSource.options,
-        entities: [entity],
-      } as ConnectionOptions);
+      if (entity) {
+        connection = await createConnection({
+          ...AppDataSource.options,
+          entities: [entity],
+        } as ConnectionOptions);
 
-      const repository = connection.getRepository(entity);
-      for (const data of dataJson) {
-        let create = repository.create(data);
-        try {
-          await repository.save(repository.create(create));
-        } catch (error) {
-          console.error(
-            `Error while loading data for ${tableName}: ${error.message}`,
-          );
+        const repository = connection.getRepository(entity);
+        for (const data of dataJson) {
+          let create = repository.create(data);
+          try {
+            await repository.save(create);
+          } catch (error) {
+            console.error(
+              `Error while loading data for ${entityName}`,
+              error.message,
+            );
+          }
         }
-      }
 
-      if (connection) {
-        await connection.close();
+        if (connection) {
+          await connection.close();
+        }
       }
     }
   }
