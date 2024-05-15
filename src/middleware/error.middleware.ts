@@ -10,8 +10,6 @@ import { logger } from "./logger.middleware";
 
 @Catch()
 export class ErrorMiddleware implements ExceptionFilter {
-  constructor(private debug: boolean) {}
-
   catch(exception: any, host: ArgumentsHost) {
     let status = HttpStatus.INTERNAL_SERVER_ERROR;
     const http = host.switchToHttp();
@@ -31,7 +29,7 @@ export class ErrorMiddleware implements ExceptionFilter {
       RCM: HttpStatus[status],
     };
 
-    if (this.debug) {
+    if (process.env.NODE_ENV === "sandbox") {
       const message = exception.response.message
         ? exception.response.message
         : exception;

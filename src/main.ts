@@ -5,26 +5,24 @@ import {
   NestFastifyApplication,
 } from "@nestjs/platform-fastify";
 
+import { AppModule } from "./app.module";
 import { ErrorMiddleware } from "./middleware/error.middleware";
 import { LoggerMiddleware } from "./middleware/logger.middleware";
-import { AppModule } from "./app.module";
 
 async function bootstrap() {
-  let debug = false;
+  const env = process.env.NODE_ENV.trim();
   const app = await NestFactory.create<NestFastifyApplication>(
     AppModule,
     new FastifyAdapter({ logger: false }),
   );
 
-  const configService = app.get(ConfigService);
-  const { port, host } = configService.get("application");
+  const listen = app.get(ConfigService);
+  const { port, host } = listen.get("application");
 
-  if (process.env.NODE_ENV === "sandbox") {
-    debug = true;
+  app.useGlobalFilters(new ErrorMiddleware());
+  if (env === "sandbox") {
     app.use(new LoggerMiddleware().use);
   }
-
-  app.useGlobalFilters(new ErrorMiddleware(debug));
 
   await app.listen(port, host);
 }

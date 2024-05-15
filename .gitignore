@@ -59,12 +59,8 @@ report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 .generate.ps1
 
 src/migrations/*
-
 src/database/entity/*
-!test.entity.ts
+src/database/entityJson/*
 
-src/database/source/*
-!test.data.json
-
-src/auth
-src/application
+!_dummy.entity.ts
+!_dummy.data.json
