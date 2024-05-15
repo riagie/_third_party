@@ -17,7 +17,7 @@ async function bootstrap() {
   );
 
   const listen = app.get(ConfigService);
-  const { PORT, HOST } = listen.get("application");
+  const { PORT, HOST } = listen.get("APPLICATION");
 
   app.useGlobalFilters(new ErrorMiddleware());
   if (env === "sandbox") {
