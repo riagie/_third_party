@@ -10,19 +10,16 @@ import { ErrorMiddleware } from "./middleware/error.middleware";
 import { LoggerMiddleware } from "./middleware/logger.middleware";
 
 async function bootstrap() {
-  const env = process.env.NODE_ENV.trim();
+  const logger = process.env.NODE_ENV.trim() === "sandbox";
   const app = await NestFactory.create<NestFastifyApplication>(
     AppModule,
-    new FastifyAdapter({ logger: false }),
+    new FastifyAdapter({ logger: true }),
   );
 
-  const listen = app.get(ConfigService);
-  const { PORT, HOST } = listen.get("APPLICATION");
+  const { PORT, HOST } = app.get(ConfigService).get("APPLICATION");
 
   app.useGlobalFilters(new ErrorMiddleware());
-  if (env === "sandbox") {
-    app.use(new LoggerMiddleware().use);
-  }
+  logger && app.use(new LoggerMiddleware().use);
 
   await app.listen(PORT, HOST);
 }

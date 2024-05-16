@@ -3,14 +3,12 @@ import { readdirSync, statSync } from "fs";
 import { join, basename, extname } from "path";
 
 import { AppDataSource } from "../app.connection";
-
-interface DataJson {
-  [key: string]: any;
-}
+import { DataJson } from "../interface/app.interface";
 
 const source = (directory: string, dataJson: string, files: string[]) => {
   readdirSync(directory).forEach((value) => {
     const items = join(directory, value);
+
     if (statSync(items).isDirectory()) {
       source(items, dataJson, files);
     } else if (value.endsWith(dataJson)) {
@@ -47,6 +45,7 @@ async function loadDatabase(): Promise<void> {
         } as ConnectionOptions);
 
         const repository = connection.getRepository(entity);
+
         for (const data of dataJson) {
           let create = repository.create(data);
           try {
@@ -58,7 +57,7 @@ async function loadDatabase(): Promise<void> {
             );
           }
         }
-
+        
         if (connection) {
           await connection.close();
         }

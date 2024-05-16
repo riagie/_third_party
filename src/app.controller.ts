@@ -1,6 +1,6 @@
 import { Controller, Get, Post } from "@nestjs/common";
 
-import { Response } from "./app.response";
+import { Res } from "./interface/app.interface";
 import { AppService } from "./app.service";
 
 @Controller()
@@ -9,7 +9,14 @@ export class AppController {
 
   @Get()
   @Post()
-  index(): Response<string> {
-    return this.appService.index();
+  async index(): Promise<Res<any>> {
+    const data = await this.appService.index();
+    const res = {
+      RC: 200,
+      RCM: "SUCCESS",
+      DATA: data,
+    };
+
+    return res;
   }
 }

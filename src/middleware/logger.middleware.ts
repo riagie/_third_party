@@ -2,37 +2,14 @@ import { Injectable, NestMiddleware } from "@nestjs/common";
 import { FastifyRequest, FastifyReply } from "fastify";
 import { createLogger, transports, format } from "winston";
 
-export const logger = createLogger({
-  level: "info",
-  format: format.combine(format.timestamp(), format.json()),
-  transports: [
-    new transports.File({ filename: "logs/error.log", level: "error" }),
-    new transports.File({ filename: "logs/combined.log" }),
-  ],
-});
-
-interface RequestData {
-  method: string;
-  protocol: string;
-  hostname: string;
-  url: string;
-  query: any;
-  body: any;
-  remoteAddress: string;
-  remotePort: number;
-}
-
-interface ResponseData {
-  statusCode: number;
-}
+import { requestData, responseData } from "../interface/app.interface";
 
 @Injectable()
 export class LoggerMiddleware implements NestMiddleware {
   use(req: FastifyRequest, res: FastifyReply, next: () => void): void {
     const start = process.hrtime();
     const requestId = `req-${Math.floor(Math.random() * 10000)}`;
-
-    const requestData: RequestData = {
+    const requestData: requestData = {
       method: req.method,
       protocol: req.protocol,
       hostname: req.hostname,
@@ -45,10 +22,7 @@ export class LoggerMiddleware implements NestMiddleware {
 
     const elapsed = process.hrtime(start);
     const responseTime = (elapsed[0] * 1000 + elapsed[1] / 1000000).toFixed(3);
-
-    const responseData: ResponseData = {
-      statusCode: res.statusCode,
-    };
+    const responseData: responseData = { statusCode: res.statusCode };
 
     logger.info({
       time: Date.now(),
@@ -64,3 +38,12 @@ export class LoggerMiddleware implements NestMiddleware {
     next();
   }
 }
+
+export const logger = createLogger({
+  level: "info",
+  format: format.combine(format.timestamp(), format.json()),
+  transports: [
+    new transports.File({ filename: "logs/error.log", level: "error" }),
+    new transports.File({ filename: "logs/combined.log" }),
+  ],
+});

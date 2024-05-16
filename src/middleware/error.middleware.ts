@@ -18,21 +18,23 @@ export class ErrorMiddleware implements ExceptionFilter {
     try {
       status = exception.getStatus();
     } catch (error) {
-      logger.error({
-        hostname: require("os").hostname(),
-        msg: exception,
-      });
+      logger.error({ hostname: require("os").hostname(), msg: exception });
     }
 
-    const responseData = {
-      RC: status,
-      RCM: HttpStatus[status],
-    };
+    const responseData = { RC: status, RCM: HttpStatus[status] };
 
-    if (process.env.NODE_ENV === "sandbox") {
-      const message = exception.response.message
-        ? exception.response.message
-        : exception;
+    if (process.env.NODE_ENV.trim() === "sandbox") {
+      let message = exception;
+      if (exception.code) {
+        message = exception.code;
+      }
+
+      if (exception.response) {
+        message = exception.response.message
+          ? exception.response.message
+          : exception;
+      }
+
       responseData["DATA"] = message;
     }
 

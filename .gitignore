@@ -63,5 +63,5 @@ src/migrations/*
 src/database/entity/*
 src/database/entityJson/*
 
-!_dummy.entity.ts
-!_dummy.data.json
+!d.entity.ts
+!d.data.json

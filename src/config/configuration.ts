@@ -15,6 +15,6 @@ export default () => ({
     USERNAME: process.env.DB_USERNAME,
     PASSWORD: process.env.DB_PASSWORD,
   },
-  SECRETKEY: process.env.JWT_SECRET || "1a492d91cf483cf1130784c885e099e7",
-  EXPIRE_IN: process.env.JWT_EXPIRES || 30,
+  SECRET_KEY: process.env.JWT_SECRET || "1a492d91cf483cf1130784c885e099e7",
+  EXPIRE_DATE: process.env.JWT_EXPIRES || 30,
 });

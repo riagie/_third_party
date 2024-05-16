@@ -1,11 +1,9 @@
 import { DataSource } from "typeorm";
 import * as dotenv from "dotenv";
+dotenv.config();
 
 import ConfigService from "./config/configuration";
-
-dotenv.config();
 const config = ConfigService();
-
 let AppDataSource: DataSource | undefined;
 
 if (config.DATABASE.ADAPTER) {
@@ -18,12 +16,16 @@ if (config.DATABASE.ADAPTER) {
     database: config.DATABASE.DATABASE,
     synchronize: false,
     dropSchema: false,
-    logging: false,
+    logging: true,
     logger: "file",
-    entities: [__dirname + "/database/**/*.entity.ts"],
-    migrations: [__dirname + "/migrations/**/*.ts"],
+    entities: [__dirname + "/database/entity/**/*.entity{.ts,.js}"],
+    migrations: [__dirname + "/migrations/**/*{.ts,.js}"],
     migrationsTableName: "migration_table",
   });
 }
+
+AppDataSource.initialize()
+  .then(() => {})
+  .catch((error) => console.error("Error initialize database", error));
 
 export { AppDataSource };
