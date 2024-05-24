@@ -1,20 +1,17 @@
 import { Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
 import { TypeOrmModule } from "@nestjs/typeorm";
-
-import configuration from "./config/configuration";
-import { AppService } from "./app.service";
-import { AppController } from "./app.controller";
+import { AppsModule } from "./app/app.module";
 import { AppDataSource } from "./app.connection";
-import { BaseModule } from "./app/base.module";
+import configuration from "./config/configuration";
 
 @Module({
   imports: [
-    ConfigModule.forRoot({ load: [configuration] }),
+    ConfigModule.forRoot({
+      load: [configuration],
+    }),
     ...(AppDataSource ? [TypeOrmModule.forRoot(AppDataSource.options)] : []),
-    BaseModule,
+    AppsModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
 })
 export class AppModule {}

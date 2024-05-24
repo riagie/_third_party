@@ -1,9 +1,11 @@
 import { createConnection, ConnectionOptions } from "typeorm";
 import { readdirSync, statSync } from "fs";
 import { join, basename, extname } from "path";
+import { AppDataSource } from "../../app.connection";
 
-import { AppDataSource } from "../app.connection";
-import { DataJson } from "../interface/app.interface";
+export interface DataJson {
+  [key: string]: any;
+}
 
 const source = (directory: string, dataJson: string, files: string[]) => {
   readdirSync(directory).forEach((value) => {
@@ -53,11 +55,11 @@ async function loadDatabase(): Promise<void> {
           } catch (error) {
             console.error(
               `Error while loading data for ${entityName}`,
-              error.message,
+              error.message
             );
           }
         }
-        
+
         if (connection) {
           await connection.close();
         }
@@ -65,5 +67,4 @@ async function loadDatabase(): Promise<void> {
     }
   }
 }
-
 loadDatabase();

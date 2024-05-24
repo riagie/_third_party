@@ -3,6 +3,7 @@ import * as dotenv from "dotenv";
 dotenv.config();
 
 import ConfigService from "./config/configuration";
+
 const config = ConfigService();
 let AppDataSource: DataSource | undefined;
 
@@ -18,14 +19,13 @@ if (config.DATABASE.ADAPTER) {
     dropSchema: false,
     logging: true,
     logger: "file",
-    entities: [__dirname + "/database/entity/**/*.entity{.ts,.js}"],
-    migrations: [__dirname + "/migrations/**/*{.ts,.js}"],
+    entities: [__dirname + "/core/database/entity/**/*.entity{.ts,.js}"],
+    migrations: [__dirname + "/core/migrations/**/*{.ts,.js}"],
     migrationsTableName: "migration_table",
   });
+
+  AppDataSource.initialize()
+    .then(() => {})
+    .catch((error) => console.error("Error initialize database", error));
 }
-
-AppDataSource.initialize()
-  .then(() => {})
-  .catch((error) => console.error("Error initialize database", error));
-
 export { AppDataSource };

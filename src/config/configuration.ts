@@ -1,7 +1,15 @@
 export default () => ({
-  APPLICATION: {
+  APP: {
     HOST: process.env.APP_URL || "127.0.0.1",
     PORT: parseInt(process.env.APP_PORT, 10) || 3000,
+    DEBUG:
+      process.env.APP_DEBUG === "false"
+        ? false
+        : Boolean(process.env.APP_DEBUG),
+    LOG:
+      process.env.APP_LOGGER === "false"
+        ? false
+        : Boolean(process.env.APP_LOGGER),
   },
   DATABASE: {
     ADAPTER:

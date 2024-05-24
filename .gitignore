@@ -58,10 +58,9 @@ report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 # other .gitignore
 .generate.ps1
 
-app
-src/migrations/*
-src/database/entity/*
-src/database/entityJson/*
+src/core/migrations/*
+src/core/database/entity/*
+src/core/database/entityJson/*
 
 !d.entity.ts
 !d.data.json
