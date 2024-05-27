@@ -16,6 +16,7 @@ async function bootstrap() {
     new FastifyAdapter()
   );
 
+  app.enableCors();
   app.use(new LoggerMiddleware().use);
   app.useGlobalFilters(new ErrorMiddleware());
 
